@@ -839,6 +839,61 @@
             "requirements": {
                 "validation": "AUC/AP reported with deterministic sampling."
             }
+        },
+        {
+            "series": "Time Series Forecasting",
+            "level": 1,
+            "id": "ts_lvl1_gru_sine",
+            "algorithm": "GRU (Time Series Forecasting)",
+            "description": "Implement a GRU-based model to forecast a synthetic noisy sine wave using a sliding window approach.",
+            "interface_protocol": "pytorch_task_v1",
+            "requirements": {
+                "data": "Synthetic noisy sine wave. Create rolling windows for X (past) and y (future).",
+                "implementation": "torch.nn.GRU + Linear head. Use MSELoss.",
+                "validation": "Test MSE must be strictly lower than a naive baseline.",
+                "visualization": "Save 'ts_forecast.png' showing true vs predicted future sequence."
+            }
+        },
+        {
+            "series": "Advanced Optimization",
+            "level": 1,
+            "id": "optim_lvl1_adamw_cosine",
+            "algorithm": "CNN (AdamW + Cosine Annealing)",
+            "description": "Train a CNN on CIFAR-10 comparing standard Adam vs AdamW with CosineAnnealingWarmRestarts.",
+            "interface_protocol": "pytorch_task_v1",
+            "requirements": {
+                "data": "torchvision.datasets.CIFAR10. 80/20 train/val split.",
+                "implementation": "Implement AdamW and torch.optim.lr_scheduler.CosineAnnealingWarmRestarts.",
+                "visualization": "Plot Learning Rate schedule curve and validation loss curve.",
+                "validation": "Assert that validation accuracy exceeds 0.40 within 2 epochs."
+            }
+        },
+        {
+            "series": "Data Augmentation",
+            "level": 1,
+            "id": "aug_lvl1_mixup",
+            "algorithm": "Mixup Training",
+            "description": "Implement Mixup training to regularize a neural network on FashionMNIST.",
+            "interface_protocol": "pytorch_task_v1",
+            "requirements": {
+                "data": "Use torchvision.datasets.FashionMNIST. Split 80/20 for train/validation.",
+                "math": "Include Mixup formulas for x_tilde and y_tilde using Beta distribution in docstring.",
+                "implementation": "Modify training loop to interpolate pairs of batches. Use soft cross-entropy loss.",
+                "validation": "Document validation accuracy; ensure model achieves > 0.70 accuracy."
+            }
+        },
+        {
+            "series": "Transfer Learning",
+            "level": 1,
+            "id": "tl_lvl1_mobilenet_freeze",
+            "algorithm": "Feature Extraction (MobileNetV2)",
+            "description": "Use a pre-trained MobileNetV2 from torchvision, freeze all backbone layers, and train a custom classifier head.",
+            "interface_protocol": "pytorch_task_v1",
+            "requirements": {
+                "data": "torchvision.datasets.CIFAR10 resized for MobileNet.",
+                "implementation": "Set requires_grad = False for backbone parameters. Replace classifier head.",
+                "validation": "Assert training achieves > 0.60 accuracy on validation in 1 epoch."
+            }
         }
     ]
 }
