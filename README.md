@@ -12,7 +12,7 @@ This repository contains four distinct deep learning tasks implemented from scra
 
 ### 1. Sequence Modeling: GRU Time Series Forecasting
 *(File: `tasks/ts_lvl1_gru_sine/task.py`)* A sequential forecasting model utilizing a Gated Recurrent Unit (GRU). The network learns the underlying pattern of a noisy synthetic sine wave to predict future temporal values.
-![GRU Forecast](assets/ts_forecast.png)
+![GRU Forecast](output/ts_forecast.png)
 
 ### 2. Optimization: AdamW & Cosine Annealing
 *(File: `tasks/optim_lvl1_adamw_cosine/task.py`)* A Convolutional Neural Network (CNN) trained on image data to demonstrate modern optimization techniques. It replaces standard Adam with the AdamW optimizer and implements a Cosine Annealing Warm Restarts learning rate scheduler.
