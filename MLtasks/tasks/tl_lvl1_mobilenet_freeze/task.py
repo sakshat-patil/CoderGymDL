@@ -78,20 +78,20 @@ def train(model, train_loader, epochs=EPOCHS, device=None):
             loss.backward()
             optimizer.step()
 
-def evaluate(model, val_loader, device=None):
+def evaluate(model, data_loader, device=None):
     if device is None:
         device = get_device()
-        
+
     model.eval()
     correct, total = 0, 0
     with torch.no_grad():
-        for x, y in val_loader:
+        for x, y in data_loader:
             x, y = x.to(device), y.to(device)
             outputs = model(x)
             _, predicted = torch.max(outputs.data, 1)
             total += y.size(0)
             correct += (predicted == y).sum().item()
-            
+
     return {
         "accuracy": correct / total,
         "mse": 0.0,
@@ -105,8 +105,12 @@ def predict(model, input_tensor, device=None):
     with torch.no_grad():
         return model(input_tensor.to(device))
 
-def save_artifacts(metrics, output_dir="output"):
+def save_artifacts(train_metrics, val_metrics, output_dir="output"):
     os.makedirs(output_dir, exist_ok=True)
+    metrics = {
+        "train": train_metrics,
+        "val": val_metrics
+    }
     with open(os.path.join(output_dir, "metrics.json"), "w") as f:
         json.dump(metrics, f, indent=2)
 
@@ -114,24 +118,33 @@ def main():
     print("=" * 60)
     print("MobileNetV2 Transfer Learning Task")
     print("=" * 60)
-    
+
     device = get_device()
     set_seed()
-    
+
     print("\nCreating dataloaders...")
     train_loader, val_loader = make_dataloaders()
-    
+
     print("Building model...")
     model = build_model(device=device)
-    
+
     print("Training model...")
     train(model, train_loader, device=device)
-    
-    print("\nEvaluating on validation set...")
+
+    print("\nEvaluating on training set...")
+    train_metrics = evaluate(model, train_loader, device=device)
+
+    print("Evaluating on validation set...")
     val_metrics = evaluate(model, val_loader, device=device)
-    
+
     print("\nSaving artifacts...")
-    save_artifacts(val_metrics)
+    save_artifacts(train_metrics, val_metrics)
+
+    print("\n" + "=" * 60)
+    print("Results:")
+    print("=" * 60)
+    print(f"Train Accuracy: {train_metrics['accuracy']:.4f}")
+    print(f"Val Accuracy:   {val_metrics['accuracy']:.4f}")
     
     print("\n" + "=" * 60)
     print("Quality Checks:")

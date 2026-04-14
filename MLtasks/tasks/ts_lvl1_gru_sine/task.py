@@ -133,9 +133,9 @@ def predict(model, input_tensor, device=None):
     with torch.no_grad():
         return model(input_tensor.to(device)).cpu().numpy()
 
-def save_artifacts(train_losses, val_losses, val_metrics, output_dir="output"):
+def save_artifacts(train_losses, val_losses, train_metrics, val_metrics, output_dir="output"):
     os.makedirs(output_dir, exist_ok=True)
-    
+
     plt.figure(figsize=(10, 4))
     plt.plot(val_metrics['targets'][:100], label='True')
     plt.plot(val_metrics['predictions'][:100], label='Predicted')
@@ -143,8 +143,14 @@ def save_artifacts(train_losses, val_losses, val_metrics, output_dir="output"):
     plt.legend()
     plt.savefig(os.path.join(output_dir, "ts_forecast.png"))
     plt.close()
-    
-    metrics = {"val_mse": val_metrics["mse"], "val_r2": val_metrics["r2"]}
+
+    # Save both metrics
+    metrics = {
+        "train_mse": train_metrics["mse"],
+        "train_r2": train_metrics["r2"],
+        "val_mse": val_metrics["mse"],
+        "val_r2": val_metrics["r2"]
+    }
     with open(os.path.join(output_dir, "metrics.json"), "w") as f:
         json.dump(metrics, f, indent=2)
 
@@ -152,24 +158,33 @@ def main():
     print("=" * 60)
     print("GRU Time Series Forecasting Task")
     print("=" * 60)
-    
+
     device = get_device()
     set_seed()
-    
+
     print("\nCreating dataloaders...")
-    train_loader, val_loader, _, _, _, y_val = make_dataloaders()
-    
+    train_loader, val_loader, _, _, y_train, y_val = make_dataloaders()
+
     print("Building model...")
     model = build_model(device=device)
-    
+
     print("Training model...")
     train_losses, val_losses = train(model, train_loader, val_loader, device=device)
-    
-    print("\nEvaluating on validation set...")
+
+    print("\nEvaluating on training set...")
+    train_metrics = evaluate(model, train_loader, y_train, device=device)
+
+    print("Evaluating on validation set...")
     val_metrics = evaluate(model, val_loader, y_val, device=device)
-    
+
     print("\nSaving artifacts...")
-    save_artifacts(train_losses, val_losses, val_metrics)
+    save_artifacts(train_losses, val_losses, train_metrics, val_metrics)
+
+    print("\n" + "=" * 60)
+    print("Results:")
+    print("=" * 60)
+    print(f"Train MSE: {train_metrics['mse']:.4f} | Train R2: {train_metrics['r2']:.4f}")
+    print(f"Val MSE:   {val_metrics['mse']:.4f} | Val R2:   {val_metrics['r2']:.4f}")
     
     print("\n" + "=" * 60)
     print("Quality Checks:")
