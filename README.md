@@ -16,14 +16,14 @@ This repository contains four distinct deep learning tasks implemented from scra
 
 ### 2. Optimization: AdamW & Cosine Annealing
 *(File: `tasks/optim_lvl1_adamw_cosine/task.py`)* A Convolutional Neural Network (CNN) trained on image data to demonstrate modern optimization techniques. It replaces standard Adam with the AdamW optimizer and implements a Cosine Annealing Warm Restarts learning rate scheduler.
-![Learning Rate Schedule](assets/lr_schedule.png)
-![Train vs Val Loss](assets/loss_curve.png)
+![Learning Rate Schedule](output/lr_schedule.png)
+![Train vs Val Loss](output/loss_curve.png)
 
 ### 3. Anomaly Detection: Autoencoder
 *(File: `tasks/anom_lvl4_autoencoder_anom/task.py`)* An unsupervised learning approach to anomaly detection. The script trains an encoder-decoder architecture to reconstruct normal data, calculates a dynamic threshold based on the F1 score, and uses the MSE reconstruction loss to flag anomalous data points.
-![Autoencoder Training History](assets/training_history.png)
-![Error Distribution](assets/error_distribution.png)
-![ROC Curve](assets/roc_curve.png)
+![Autoencoder Training History](output/training_history.png)
+![Error Distribution](output/error_distribution.png)
+![ROC Curve](output/roc_curve.png)
 
 ### 4. Transfer Learning: MobileNetV2
 *(File: `tasks/tl_lvl1_mobilenet_freeze/task.py`)* A computer vision transfer learning task. It imports a pre-trained MobileNetV2 model, freezes the core feature extraction layers, and trains a brand new custom classification head. *(Evaluated via console metrics).*
